@@ -1,3 +1,5 @@
+import { useEffect, useState, useCallback } from 'react';
+import { useColorScheme, View } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {
 	DarkTheme,
@@ -7,9 +9,8 @@ import {
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect, useState, useCallback } from 'react';
-import { useColorScheme } from 'react-native';
-import { View } from 'react-native';
+import Entypo from '@expo/vector-icons/Entypo';
+import * as Font from 'expo-font';
 
 export {
 	// Catch any errors thrown by the Layout component.
@@ -30,11 +31,10 @@ export default function RootLayout() {
 		...FontAwesome.font,
 	});
 
-	// Expo Router uses Error Boundaries to catch errors in the navigation tree.
 	useEffect(() => {
 		async function prepare() {
 			try {
-				await new Promise((resolve) => setTimeout(resolve, 2000));
+				await Font.loadAsync(Entypo.font);
 			} catch (e) {
 				console.warn(e);
 			} finally {
@@ -57,10 +57,8 @@ export default function RootLayout() {
 	}
 
 	return (
-		<View style={{ flex: 1 }}>
-			{/* Keep the splash screen open until the assets have loaded. In the future, we should just support async font loading with a native version of font-display. */}
-			{/* {!loaded && <SplashScreen />} */}
-			{<RootLayoutNav />}
+		<View onLayout={onLayoutRootView} style={{ flex: 1 }}>
+			<RootLayoutNav />
 		</View>
 	);
 }
@@ -71,9 +69,12 @@ function RootLayoutNav() {
 	return (
 		<>
 			<ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-				<Stack>
+				<Stack initialRouteName='(tabs)'>
 					<Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-					<Stack.Screen name='modal' options={{ presentation: 'modal' }} />
+					<Stack.Screen
+						name='ManageExpense'
+						options={{ presentation: 'card', title: 'Manage Expense' }}
+					/>
 				</Stack>
 			</ThemeProvider>
 		</>
