@@ -1,6 +1,6 @@
 import { FlatList, Text } from 'react-native';
-import { Expense } from '../../types';
-import { ExpenseItem } from '../';
+import { Expense } from '../../../types';
+import { ExpenseItem } from '../..';
 
 interface ExpensesListProps {
 	expenses: Array<Expense>;

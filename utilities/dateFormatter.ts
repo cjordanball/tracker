@@ -15,7 +15,6 @@ const months = [
 const dateFormatter = (date: Date): string => {
 	const day = date.getDate();
 	const month = date.getMonth();
-	console.log(month);
 	const year = date.getFullYear();
 	return `${day} ${months[month]} ${year}`;
 };

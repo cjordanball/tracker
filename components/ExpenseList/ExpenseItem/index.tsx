@@ -1,15 +1,24 @@
 import { Text, View, Pressable } from 'react-native';
 import { styles } from './expenseItemStyle';
-import { Expense } from '../../types';
-import { dateFormatter } from '../../utilities';
+import { Expense } from '../../../types';
+import { dateFormatter } from '../../../utilities';
+import { useNavigation } from 'expo-router';
 
 interface ExpenseItemProps {
 	expense: Expense;
 }
 
 const ExpenseItem = ({ expense }: ExpenseItemProps) => {
+	const nav = useNavigation();
+	const expensePressHandler = () => {
+		nav.navigate('ManageExpense', { expenseId: expense.id });
+	};
+
 	return (
-		<Pressable>
+		<Pressable
+			onPress={expensePressHandler}
+			style={({ pressed }) => (pressed ? styles.pressed : null)}
+		>
 			<View style={styles.expenseItem}>
 				<View>
 					<Text style={[styles.textBase, styles.description]}>
