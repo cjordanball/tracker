@@ -12,7 +12,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import Entypo from '@expo/vector-icons/Entypo';
 import * as Font from 'expo-font';
 import { GlobalStyles } from '../constants/Colors';
-import { ExpensesContextProvider } from '../store/expenses-context';
+import ExpensesContextProvider from '../store/expenses-context';
 
 export {
 	// Catch any errors thrown by the Layout component.

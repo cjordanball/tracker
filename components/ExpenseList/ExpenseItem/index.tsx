@@ -11,7 +11,7 @@ interface ExpenseItemProps {
 const ExpenseItem = ({ expense }: ExpenseItemProps) => {
 	const nav = useNavigation();
 	const expensePressHandler = () => {
-		nav.navigate('ManageExpense', { expenseId: expense.id });
+		nav.navigate('ManageExpense', { expense });
 	};
 
 	return (
@@ -25,7 +25,7 @@ const ExpenseItem = ({ expense }: ExpenseItemProps) => {
 						{expense.title}
 					</Text>
 					<Text style={styles.textBase}>
-						{dateFormatter(expense.dateCreated)}
+						{dateFormatter(new Date(expense.dateCreated))}
 					</Text>
 				</View>
 				<View style={styles.amountContainer}>

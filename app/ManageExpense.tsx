@@ -1,18 +1,21 @@
-import { useLayoutEffect } from 'react';
-import { Text, View } from 'react-native';
+import { useLayoutEffect, useContext } from 'react';
+import { ExpensesContext } from '../store/expenses-context';
+import { View } from 'react-native';
 import { styles } from './manageExpenseStyle';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { CustButton, IconButton } from '../components';
 import { GlobalStyles } from '../constants/Colors';
+import { Expense } from '../types';
 
 // interface ManageExpenseProps {
-// 	expenseId: string;
+// 	hotExpense: Expense;
 // }
 
 const ManageExpense = () => {
+	const expenseData = useContext(ExpensesContext);
 	const route = useRoute();
 	const nav = useNavigation();
-	const editedExpenseId = route.params?.expenseId;
+	const editedExpenseId = route.params?.expense.id;
 	const isEditing = !!editedExpenseId;
 
 	useLayoutEffect(() => {
@@ -23,6 +26,7 @@ const ManageExpense = () => {
 
 	const deleteExpenseHandler = () => {
 		console.log('Pressed and Deleted!');
+		expenseData.deleteExpense(route.params?.expense);
 		nav.goBack();
 	};
 
@@ -33,6 +37,15 @@ const ManageExpense = () => {
 
 	const confirmHandler = () => {
 		console.log('Confirming!');
+		if (isEditing) {
+			expenseData.updateExpense({ title: 'screwdriver' });
+		} else {
+			expenseData.addExpense({
+				title: 'screwdriver',
+				amount: 5.0,
+				dateCreated: new Date().toString(),
+			});
+		}
 		nav.goBack();
 	};
 

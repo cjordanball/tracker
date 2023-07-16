@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react';
+import { createContext, useReducer } from 'react';
 import { Expense } from '../types';
 
 export const ExpensesContext = createContext({
@@ -8,36 +8,57 @@ export const ExpensesContext = createContext({
 	updateExpense: (expense: Expense) => {},
 });
 
+const expensesReducer = (state: Array<Expense>, action: any) => {
+	switch (action.type) {
+		case 'ADD':
+			const id = Date.now().toString(10) + Math.random().toString(10);
+			action.payload.id = id;
+			return [action.payload, ...state];
+		case 'DELETE':
+			return state.filter((item) => item.id !== action.payload.id);
+		case 'UPDATE':
+			const expenseIndex = state.findIndex(
+				(item) => item.id === action.payload.id
+			);
+			if (expenseIndex === -1) return state;
+			const modItem = { ...state[expenseIndex], ...action.payload };
+			const newState = [...state];
+			newState[expenseIndex] = modItem;
+			return newState;
+		default:
+			return state;
+	}
+};
+
 interface ExpensesContextProviderProps {
 	children: React.ReactNode;
 }
 
-export const ExpensesContextProvider = ({
+const ExpensesContextProvider = ({
 	children,
 }: ExpensesContextProviderProps) => {
-	const [expenses, setExpenses] = useState<Array<Expense>>([
+	const [expensesState, dispatch] = useReducer(expensesReducer, [
 		{
-			id: 'e2',
-			title: 'A pair of pants',
-			amount: 89.99,
-			dateCreated: new Date(2022, 0, 5),
+			id: 'eu',
+			title: 'hammer',
+			amount: 3.97,
+			dateCreated: new Date(2022, 11, 14).toString(),
 		},
 	]);
 
 	const addExpense = (expense: Expense) => {
-		setExpenses([...expenses, expense]);
+		dispatch({ type: 'ADD', payload: expense });
 	};
 	const deleteExpense = (expense: Expense) => {
-		setExpenses(expenses.filter((item) => expense.id !== item.id));
+		dispatch({ type: 'DELETE', payload: expense });
 	};
-	const updateExpense = (expense: Expense) => {
-		const expenseIndex = expenses.findIndex((item) => item.id === expense.id);
-		if (expenseIndex === -1) return;
-		setExpenses(expenses.toSpliced(expenseIndex, 1, expense));
+	const updateExpense = (expense: object) => {
+		console.log('Updating expense: ', expense);
+		dispatch({ type: 'UPDATE', payload: expense });
 	};
 
 	const context = {
-		expenses,
+		expenses: expensesState,
 		addExpense,
 		deleteExpense,
 		updateExpense,
@@ -50,4 +71,4 @@ export const ExpensesContextProvider = ({
 	);
 };
 
-export default ExpensesContext;
+export default ExpensesContextProvider;

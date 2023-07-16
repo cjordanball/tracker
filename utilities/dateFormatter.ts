@@ -12,10 +12,11 @@ const months = [
 	'November',
 	'December',
 ];
-const dateFormatter = (date: Date): string => {
-	const day = date.getDate();
-	const month = date.getMonth();
-	const year = date.getFullYear();
+const dateFormatter = (date: string): string => {
+	const dateObj = new Date(date);
+	const day = dateObj.getDate();
+	const month = dateObj.getMonth();
+	const year = dateObj.getFullYear();
 	return `${day} ${months[month]} ${year}`;
 };
 
