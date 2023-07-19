@@ -1,15 +1,11 @@
 import { useLayoutEffect, useContext } from 'react';
 import { ExpensesContext } from '../store/expenses-context';
-import { View } from 'react-native';
+import { View, TextInput } from 'react-native';
 import { styles } from './manageExpenseStyle';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { CustButton, IconButton } from '../components';
+import { CustButton, IconButton, ExpenseForm } from '../components';
 import { GlobalStyles } from '../constants/Colors';
 import { Expense } from '../types';
-
-// interface ManageExpenseProps {
-// 	hotExpense: Expense;
-// }
 
 const ManageExpense = () => {
 	const expenseData = useContext(ExpensesContext);
@@ -24,49 +20,42 @@ const ManageExpense = () => {
 		});
 	}, [nav, isEditing]);
 
-	const deleteExpenseHandler = () => {
-		console.log('Pressed and Deleted!');
-		expenseData.deleteExpense(route.params?.expense);
-		nav.goBack();
-	};
+	const hotExpense: Expense | undefined = expenseData.expenses.find(
+		(expense: Expense) => expense.id === editedExpenseId
+	);
+
+	console.log('Hot Expense: ', hotExpense);
 
 	const cancelHandler = () => {
 		console.log('Canceling!');
 		nav.goBack();
 	};
 
-	const confirmHandler = () => {
-		console.log('Confirming!');
+	const confirmHandler = (expense: Expense) => {
 		if (isEditing) {
-			expenseData.updateExpense({ title: 'screwdriver' });
+			expense.id = editedExpenseId;
+			expenseData.updateExpense(expense);
 		} else {
-			expenseData.addExpense({
-				title: 'screwdriver',
-				amount: 5.0,
-				dateCreated: new Date().toString(),
-			});
+			console.log('ADDING:', expense);
+			expenseData.addExpense(expense);
 		}
+		nav.goBack();
+	};
+
+	const deleteExpenseHandler = () => {
+		console.log('Pressed and Deleted!');
+		expenseData.deleteExpense(route.params?.expense);
 		nav.goBack();
 	};
 
 	return (
 		<View style={styles.container}>
-			<View style={styles.buttonsRegion}>
-				<CustButton
-					style={styles.custButton}
-					mode='flat'
-					action={cancelHandler}
-				>
-					Press
-				</CustButton>
-				<CustButton
-					style={styles.custButton}
-					mode='not-flat'
-					action={confirmHandler}
-				>
-					{isEditing ? 'Update' : 'Add'}
-				</CustButton>
-			</View>
+			<ExpenseForm
+				expense={hotExpense}
+				onCancel={cancelHandler}
+				onSubmit={confirmHandler}
+				submitButtonLabel={isEditing ? 'Update' : 'Add'}
+			/>
 			{isEditing && (
 				<View style={styles.trashButtonRegion}>
 					<IconButton

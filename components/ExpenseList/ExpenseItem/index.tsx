@@ -10,6 +10,7 @@ interface ExpenseItemProps {
 
 const ExpenseItem = ({ expense }: ExpenseItemProps) => {
 	const nav = useNavigation();
+
 	const expensePressHandler = () => {
 		nav.navigate('ManageExpense', { expense });
 	};

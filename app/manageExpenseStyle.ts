@@ -14,15 +14,4 @@ export const styles = StyleSheet.create({
 		borderTopColor: GlobalStyles.colors.primary200,
 		alignItems: 'center',
 	},
-
-	buttonsRegion: {
-		flexDirection: 'row',
-		justifyContent: 'center',
-		alignItems: 'center',
-	},
-
-	custButton: {
-		minWidth: 120,
-		marginHorizontal: 8,
-	},
 });

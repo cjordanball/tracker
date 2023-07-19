@@ -4,3 +4,4 @@ export { default as ExpensesSummary } from './ExpenseList/ExpensesSummary';
 export { default as ExpenseItem } from './ExpenseList/ExpenseItem';
 export { default as IconButton } from './UIComponents/IconButton';
 export { default as CustButton } from './UIComponents/Button';
+export { default as ExpenseForm } from './ExpenseForm';
