@@ -7,10 +7,12 @@ import {
 	ThemeProvider,
 } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { Stack, router } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import Entypo from '@expo/vector-icons/Entypo';
 import * as Font from 'expo-font';
+import { GlobalStyles } from '../constants/Colors';
+import ExpensesContextProvider from '../store/expenses-context';
 
 export {
 	// Catch any errors thrown by the Layout component.
@@ -58,7 +60,9 @@ export default function RootLayout() {
 
 	return (
 		<View onLayout={onLayoutRootView} style={{ flex: 1 }}>
-			<RootLayoutNav />
+			<ExpensesContextProvider>
+				<RootLayoutNav />
+			</ExpensesContextProvider>
 		</View>
 	);
 }
@@ -69,11 +73,26 @@ function RootLayoutNav() {
 	return (
 		<>
 			<ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-				<Stack initialRouteName='(tabs)'>
+				<Stack
+					initialRouteName='(tabs)'
+					screenOptions={{
+						headerStyle: {
+							backgroundColor: GlobalStyles.colors.primary500,
+						},
+						headerTintColor: GlobalStyles.colors.basicWhite,
+						headerTitleStyle: {
+							fontSize: 24,
+						},
+					}}
+				>
 					<Stack.Screen name='(tabs)' options={{ headerShown: false }} />
 					<Stack.Screen
 						name='ManageExpense'
-						options={{ presentation: 'card', title: 'Manage Expense' }}
+						options={{
+							presentation: 'modal',
+							title: 'Manage Expense',
+							headerShown: true,
+						}}
 					/>
 				</Stack>
 			</ThemeProvider>

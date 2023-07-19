@@ -1,7 +1,10 @@
 import { StyleSheet } from 'react-native';
-import { GlobalStyles } from '../../constants/Colors';
+import { GlobalStyles } from '../../../constants/Colors';
 
 export const styles = StyleSheet.create({
+	pressed: {
+		opacity: 0.5,
+	},
 	expenseItem: {
 		padding: 12,
 		marginVertical: 8,

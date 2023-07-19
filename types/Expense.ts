@@ -1,8 +1,8 @@
 type Expense = {
-	id: string;
+	id?: string;
 	amount: number;
 	title: string;
-	dateCreated: Date;
+	dateCreated: string;
 };
 
 export default Expense;

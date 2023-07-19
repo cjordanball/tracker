@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native';
-import { Expense } from '../../types';
+import { Expense } from '../../../types';
 import { styles } from './expensesSummaryStyle';
 
 interface ExpensesSummaryProps {

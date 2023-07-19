@@ -1,9 +1,17 @@
 import { StyleSheet } from 'react-native';
+import { GlobalStyles } from '../constants/Colors';
+
 export const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: 'navy',
+		padding: 24,
+		backgroundColor: GlobalStyles.colors.primary800,
+	},
+	trashButtonRegion: {
+		marginTop: 16,
+		paddingTop: 8,
+		borderTopWidth: 2,
+		borderTopColor: GlobalStyles.colors.primary200,
 		alignItems: 'center',
-		justifyContent: 'center',
 	},
 });

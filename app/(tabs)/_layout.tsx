@@ -3,6 +3,7 @@ import { Link, Tabs } from 'expo-router';
 import { Pressable, useColorScheme } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { GlobalStyles } from '../../constants/Colors';
+import { IconButton } from '../../components';
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
@@ -19,12 +20,22 @@ export default function TabLayout() {
 
 	return (
 		<Tabs
-			screenOptions={{
+			screenOptions={({ navigation }) => ({
 				headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },
 				headerTintColor: GlobalStyles.colors.basicWhite,
 				tabBarStyle: { backgroundColor: GlobalStyles.colors.primary500 },
 				tabBarActiveTintColor: GlobalStyles.colors.accent500,
-			}}
+				headerRight: ({ tintColor }) => (
+					<IconButton
+						icon='add'
+						size={24}
+						color={tintColor}
+						onPress={() => {
+							navigation.navigate('ManageExpense');
+						}}
+					/>
+				),
+			})}
 		>
 			<Tabs.Screen
 				name='RecentExpenses/index'
@@ -33,19 +44,6 @@ export default function TabLayout() {
 					tabBarLabel: 'Recent',
 					tabBarIcon: ({ color, size }) => (
 						<Ionicons name='hourglass' color={color} size={size} />
-					),
-					headerRight: () => (
-						<Link href='/ManageExpense' asChild>
-							<Pressable>
-								{({ pressed }) => (
-									<FontAwesome
-										name='info-circle'
-										size={25}
-										style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-									/>
-								)}
-							</Pressable>
-						</Link>
 					),
 				}}
 			/>
