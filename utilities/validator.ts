@@ -4,7 +4,6 @@ const validator = (
 ): boolean => {
 	switch (type) {
 		case 'amount':
-			console.log('value', value);
 			if (typeof value !== 'number') return false;
 			if (Number(value) < 0) return false;
 			return true;

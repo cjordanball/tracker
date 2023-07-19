@@ -17,12 +17,10 @@ const expensesReducer = (state: Array<Expense>, action: any) => {
 		case 'DELETE':
 			return state.filter((item) => item.id !== action.payload.id);
 		case 'UPDATE':
-			console.log('In update reducer', action.payload);
 			const expenseIndex = state.findIndex(
 				(item) => item.id === action.payload.id
 			);
 			if (expenseIndex === -1) return state;
-			console.log('hotEx: ', state[expenseIndex]);
 			const modItem = { ...state[expenseIndex], ...action.payload };
 			const newState = [...state];
 			newState[expenseIndex] = modItem;
@@ -55,7 +53,6 @@ const ExpensesContextProvider = ({
 		dispatch({ type: 'DELETE', payload: expense });
 	};
 	const updateExpense = (expense: object) => {
-		console.log('Updating expense: ');
 		dispatch({ type: 'UPDATE', payload: expense });
 	};
 
