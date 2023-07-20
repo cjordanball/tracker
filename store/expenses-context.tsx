@@ -3,6 +3,7 @@ import { Expense } from '../types';
 
 export const ExpensesContext = createContext({
 	expenses: [] as Array<Expense>,
+	setExpenses: (expenses: Array<Expense>) => {},
 	addExpense: (expense: Expense) => {},
 	deleteExpense: (expense: Expense) => {},
 	updateExpense: (expense: Expense) => {},
@@ -10,12 +11,12 @@ export const ExpensesContext = createContext({
 
 const expensesReducer = (state: Array<Expense>, action: any) => {
 	switch (action.type) {
+		case 'SET':
+			return action.payload;
 		case 'ADD':
-			const id = Date.now().toString(10) + Math.random().toString(10);
-			action.payload.id = id;
 			return [action.payload, ...state];
 		case 'DELETE':
-			return state.filter((item) => item.id !== action.payload.id);
+			return state.filter((item) => item.id !== action.payload);
 		case 'UPDATE':
 			const expenseIndex = state.findIndex(
 				(item) => item.id === action.payload.id
@@ -46,6 +47,9 @@ const ExpensesContextProvider = ({
 		},
 	]);
 
+	const setExpenses = (expenses: Array<Expense>) => {
+		dispatch({ type: 'SET', payload: expenses });
+	};
 	const addExpense = (expense: Expense) => {
 		dispatch({ type: 'ADD', payload: expense });
 	};
@@ -58,6 +62,7 @@ const ExpensesContextProvider = ({
 
 	const context = {
 		expenses: expensesState,
+		setExpenses,
 		addExpense,
 		deleteExpense,
 		updateExpense,

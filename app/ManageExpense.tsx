@@ -6,7 +6,7 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import { CustButton, IconButton, ExpenseForm } from '../components';
 import { GlobalStyles } from '../constants/Colors';
 import { Expense } from '../types';
-import { addExpense } from '../utilities/http';
+import { addExpense, deleteExpense, updateExpense } from '../utilities/http';
 
 const ManageExpense = () => {
 	const expenseData = useContext(ExpensesContext);
@@ -29,19 +29,24 @@ const ManageExpense = () => {
 		nav.goBack();
 	};
 
-	const confirmHandler = (expense: Expense) => {
+	const confirmHandler = async (expense: Expense) => {
 		if (isEditing) {
 			expense.id = editedExpenseId;
+
 			expenseData.updateExpense(expense);
+			updateExpense(expense);
 		} else {
-			addExpense(expense);
+			const data = await addExpense(expense);
+			expense.id = data;
+
 			expenseData.addExpense(expense);
 		}
 		nav.goBack();
 	};
 
 	const deleteExpenseHandler = () => {
-		expenseData.deleteExpense(route.params?.expense);
+		deleteExpense(editedExpenseId);
+		expenseData.deleteExpense(editedExpenseId);
 		nav.goBack();
 	};
 
