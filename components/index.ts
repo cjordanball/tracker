@@ -5,3 +5,5 @@ export { default as ExpenseItem } from './ExpenseList/ExpenseItem';
 export { default as IconButton } from './UIComponents/IconButton';
 export { default as CustButton } from './UIComponents/Button';
 export { default as ExpenseForm } from './ExpenseForm';
+export { default as Overlay } from './UIComponents/LoadingOverlay';
+export { default as ErrorScreen } from './UIComponents/ErrorOverlay';
