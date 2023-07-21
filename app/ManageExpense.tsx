@@ -1,4 +1,4 @@
-import { useLayoutEffect, useContext } from 'react';
+import { useLayoutEffect, useContext, useState } from 'react';
 import { ExpensesContext } from '../store/expenses-context';
 import { View, TextInput } from 'react-native';
 import { styles } from './manageExpenseStyle';
@@ -7,8 +7,11 @@ import { CustButton, IconButton, ExpenseForm } from '../components';
 import { GlobalStyles } from '../constants/Colors';
 import { Expense } from '../types';
 import { addExpense, deleteExpense, updateExpense } from '../utilities/http';
+import { Overlay, ErrorScreen } from '../components';
 
 const ManageExpense = () => {
+	const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+	const [error, setError] = useState<string | null>(null);
 	const expenseData = useContext(ExpensesContext);
 	const route = useRoute();
 	const nav = useNavigation();
@@ -30,25 +33,44 @@ const ManageExpense = () => {
 	};
 
 	const confirmHandler = async (expense: Expense) => {
-		if (isEditing) {
-			expense.id = editedExpenseId;
-
-			expenseData.updateExpense(expense);
-			updateExpense(expense);
-		} else {
-			const data = await addExpense(expense);
-			expense.id = data;
-
-			expenseData.addExpense(expense);
+		setIsSubmitting(true);
+		try {
+			if (isEditing) {
+				expense.id = editedExpenseId;
+				expenseData.updateExpense(expense);
+				await updateExpense(expense);
+			} else {
+				const data = await addExpense(expense);
+				expense.id = data;
+				expenseData.addExpense(expense);
+			}
+			nav.goBack();
+		} catch {
+			setError(
+				isEditing ? 'Sorry, cannot edit now.' : 'Sorry, expense not added.'
+			);
+			setIsSubmitting(false);
 		}
-		nav.goBack();
 	};
 
-	const deleteExpenseHandler = () => {
-		deleteExpense(editedExpenseId);
-		expenseData.deleteExpense(editedExpenseId);
-		nav.goBack();
+	const deleteExpenseHandler = async () => {
+		setIsSubmitting(true);
+		try {
+			await deleteExpense(editedExpenseId);
+			expenseData.deleteExpense(editedExpenseId);
+			nav.goBack();
+		} catch (err) {
+			setError("Can't delete!  Guess you are stuck with it!");
+			setIsSubmitting(false);
+		}
 	};
+
+	const errorHandler = () => {
+		setError(null);
+	};
+
+	if (error) return <ErrorScreen message={error} onConfirm={errorHandler} />;
+	if (isSubmitting) return <Overlay />;
 
 	return (
 		<View style={styles.container}>
